@@ -105,10 +105,21 @@ var Tweenable = (function () {
 
 
     var prop;
+    var easingObjectProp;
+    var easingFn;
     for (prop in currentState) {
       if (currentState.hasOwnProperty(prop)) {
-        currentState[prop] = tweenProp(originalState[prop],
-          targetState[prop], formula[easing[prop]], normalizedPosition);
+        easingObjectProp = easing[prop];
+        easingFn = typeof easingObjectProp === 'function'
+          ? easingObjectProp
+          : formula[easingObjectProp];
+
+        currentState[prop] = tweenProp(
+          originalState[prop],
+          targetState[prop],
+          easingFn,
+          normalizedPosition
+        );
       }
     }
 
@@ -213,8 +224,9 @@ var Tweenable = (function () {
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
+    var typeofEasing = typeof easing;
 
-    if (typeof easing === 'string') {
+    if (typeofEasing === 'string' || typeofEasing === 'function') {
       each(fromTweenParams, function (prop) {
         composedEasing[prop] = easing;
       });
@@ -472,7 +484,17 @@ var Tweenable = (function () {
     root.clearTimeout)(this._scheduleId);
 
     if (gotoEnd) {
-      shallowCopy(this._currentState, this._targetState);
+      applyFilter(this, 'beforeTween');
+      tweenProps(
+        1,
+        this._currentState,
+        this._originalState,
+        this._targetState,
+        1,
+        0,
+        this._easing
+      );
+      applyFilter(this, 'afterTween');
       applyFilter(this, 'afterTweenEnd');
       this._finish.call(this, this._currentState, this._attachment);
     }
