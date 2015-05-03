@@ -337,6 +337,17 @@
       equals(interpolated.x, 10, 'End of delayed tween was computed');
     });
 
+    test('Supports per-interpolation custom easing curves', function () {
+      var easingFn = function (pos) {
+        return pos * 2;
+      };
+
+      var interpolated = Tweenable.interpolate(
+        { x: 0 }, { x: 10 }, .5, easingFn);
+      equals(interpolated.x, 10,
+        'Accepts and applies non-Tweenable#formula easing function');
+    });
+
 
     module('Token');
 
