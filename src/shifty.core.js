@@ -216,11 +216,12 @@ var Tweenable = (function () {
 
 
   /*!
-   * Creates a usable easing Object from either a string or another easing
+   * Creates a usable easing Object from a string, a function or another easing
    * Object.  If `easing` is an Object, then this function clones it and fills
-   * in the missing properties with "linear".
-   * @param {Object} fromTweenParams
-   * @param {Object|string} easing
+   * in the missing properties with `"linear"`.
+   * @param {Object.<string|Function>} fromTweenParams
+   * @param {Object|string|Function} easing
+   * @return {Object.<string|Function>}
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
@@ -312,8 +313,8 @@ var Tweenable = (function () {
    * - __finish__ (_Function(Object, *)_): Function to execute upon tween
    *   completion.  Receives the state of the tween as the first parameter and
    *   `attachment` as the second parameter.
-   * - __easing__ (_Object|string=_): Easing curve name(s) to use for the
-   *   tween.
+   * - __easing__ (_Object.<string|Function>|string|Function=_): Easing curve
+   *   name(s) or function(s) to use for the tween.
    * - __attachment__ (_*_): Cached value that is passed to the
    *   `step`/`start`/`finish` methods.
    * @chainable
